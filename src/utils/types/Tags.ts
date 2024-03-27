@@ -31,4 +31,10 @@ type ExternalLink = {
   link: string;
 };
 
-export type { TagsResponse, TagItem };
+type ErrorResponse = {
+  error_id: number;
+  error_message: string;
+  error_name: string;
+};
+
+export type { TagsResponse, TagItem, ErrorResponse };

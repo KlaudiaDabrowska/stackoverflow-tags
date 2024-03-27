@@ -1,12 +1,9 @@
 "use client";
 
-import { theme } from "@/styles/theme";
 import {
-  Box,
   Card,
   CardContent,
   CardHeader,
-  CircularProgress,
   Pagination,
   Paper,
   Table,
@@ -22,6 +19,9 @@ import getTags from "@/api/getTags";
 import { useQuery } from "@tanstack/react-query";
 import columns from "@/utils/helpers/tagsTableColumns";
 import LoadingProgress from "./LoadingProgress";
+import { ErrorResponse, TagsResponse } from "@/utils/types/Tags";
+import { AxiosError } from "axios";
+import ErrorInfo from "./ErrorInfo";
 
 const TagsTable: FunctionComponent = () => {
   const router = useRouter();
@@ -32,7 +32,10 @@ const TagsTable: FunctionComponent = () => {
   const [pageSize, setPageSize] = useState(10);
   const [order, setOrder] = useState("desc");
 
-  const { data, isLoading, isError } = useQuery({
+  const { data, isLoading, isError, error } = useQuery<
+    TagsResponse,
+    AxiosError<ErrorResponse>
+  >({
     queryKey: ["tags", page, pageSize, order],
     queryFn: () => getTags({ page, pageSize, order }),
   });
@@ -44,8 +47,6 @@ const TagsTable: FunctionComponent = () => {
     setPage(page);
     router.push(`?page=${page}`);
   };
-
-  console.log(data);
 
   return (
     <Card
@@ -59,7 +60,10 @@ const TagsTable: FunctionComponent = () => {
       {isLoading ? (
         <LoadingProgress />
       ) : isError ? (
-        <div>error</div>
+        <ErrorInfo
+          error={error.response?.data.error_message}
+          statusCode={error.response?.data.error_id}
+        />
       ) : (
         <CardContent>
           <TableContainer component={Paper}>
