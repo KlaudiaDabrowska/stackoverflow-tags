@@ -26,14 +26,21 @@ import ErrorInfo from "./ErrorInfo";
 import OrderBy from "@/utils/types/OrderBy";
 import SortBy from "@/utils/types/SortBy";
 import TableHead from "./TableHead";
+import { useDebounce } from "use-debounce";
 
 const TagsTable: FunctionComponent = () => {
-  const router = useRouter();
+  const { push } = useRouter();
   const searchParams = useSearchParams();
   const queryPage = searchParams.get("page");
+  const querySortBy = searchParams.get("sortBy");
+  const queryOrderBy = searchParams.get("orderBy");
+
+  console.log("searchParams");
+  console.log(searchParams);
 
   const [page, setPage] = useState(queryPage ? +queryPage : 1);
   const [pageSize, setPageSize] = useState(10);
+  const [debouncedPageSize] = useDebounce(pageSize, 1000);
   const [orderBy, setOrderBy] = useState(OrderBy.DESC);
   const [sortBy, setSortBy] = useState(SortBy.POPULAR);
 
@@ -41,7 +48,7 @@ const TagsTable: FunctionComponent = () => {
     TagsResponse,
     AxiosError<ErrorResponse>
   >({
-    queryKey: ["tags", page, pageSize, orderBy, sortBy],
+    queryKey: ["tags", page, debouncedPageSize, orderBy, sortBy],
     queryFn: () => getTags({ page, pageSize, orderBy, sortBy }),
     retry: 1,
   });
@@ -51,7 +58,7 @@ const TagsTable: FunctionComponent = () => {
     page: number
   ) => {
     setPage(page);
-    router.push(`?page=${page}`);
+    push(`?page=${page}`);
   };
 
   return (
