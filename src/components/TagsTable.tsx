@@ -27,23 +27,24 @@ import OrderBy from "@/utils/types/OrderBy";
 import SortBy from "@/utils/types/SortBy";
 import TableHead from "./TableHead";
 import { useDebounce } from "use-debounce";
+import { parseAsStringEnum, useQueryState } from "nuqs";
 
 const TagsTable: FunctionComponent = () => {
   const { push } = useRouter();
   const searchParams = useSearchParams();
   const queryPage = searchParams.get("page");
-  const querySortBy = searchParams.get("sortBy");
-  const queryOrderBy = searchParams.get("orderBy");
-
-  console.log("searchParams");
-  console.log(searchParams);
 
   const [page, setPage] = useState(queryPage ? +queryPage : 1);
   const [pageSize, setPageSize] = useState(10);
   const [debouncedPageSize] = useDebounce(pageSize, 1000);
-  const [orderBy, setOrderBy] = useState(OrderBy.DESC);
-  const [sortBy, setSortBy] = useState(SortBy.POPULAR);
-
+  const [orderBy, setOrderBy] = useQueryState(
+    "orderBy",
+    parseAsStringEnum<OrderBy>(Object.values(OrderBy)).withDefault(OrderBy.DESC)
+  );
+  const [sortBy, setSortBy] = useQueryState(
+    "sortBy",
+    parseAsStringEnum<SortBy>(Object.values(SortBy)).withDefault(SortBy.POPULAR)
+  );
   const { data, isLoading, isError, error } = useQuery<
     TagsResponse,
     AxiosError<ErrorResponse>
@@ -58,7 +59,8 @@ const TagsTable: FunctionComponent = () => {
     page: number
   ) => {
     setPage(page);
-    push(`?page=${page}`);
+
+    push(`?page=${page}&sortBy=${sortBy}&orderBy=${orderBy}`);
   };
 
   return (

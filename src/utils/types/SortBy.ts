@@ -1,4 +1,4 @@
-const enum SortBy {
+enum SortBy {
   POPULAR = "popular",
   NAME = "name",
 }

@@ -8,7 +8,6 @@ import {
   TableRow,
   TableSortLabel,
 } from "@mui/material";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { FunctionComponent } from "react";
 
 type Props = {
@@ -24,9 +23,6 @@ const TableHead: FunctionComponent<Props> = ({
   orderBy,
   setOrderBy,
 }) => {
-  const router = useRouter();
-  const searchParams = useSearchParams();
-
   const sortHandler = (property: string) => () => {
     const propertyName = propertyNameMap.get(property) || SortBy.POPULAR;
 

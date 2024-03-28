@@ -1,4 +1,4 @@
-const enum OrderBy {
+enum OrderBy {
   DESC = "desc",
   ASC = "asc",
 }
