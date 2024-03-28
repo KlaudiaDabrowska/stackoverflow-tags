@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Box,
   Card,
   CardContent,
   CardHeader,
@@ -10,18 +11,21 @@ import {
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
+  TextField,
+  Typography,
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FunctionComponent, useState } from "react";
 import getTags from "@/api/getTags";
 import { useQuery } from "@tanstack/react-query";
-import columns from "@/utils/helpers/tagsTableColumns";
 import LoadingProgress from "./LoadingProgress";
 import { ErrorResponse, TagsResponse } from "@/utils/types/Tags";
 import { AxiosError } from "axios";
 import ErrorInfo from "./ErrorInfo";
+import OrderBy from "@/utils/types/OrderBy";
+import SortBy from "@/utils/types/SortBy";
+import TableHead from "./TableHead";
 
 const TagsTable: FunctionComponent = () => {
   const router = useRouter();
@@ -30,14 +34,16 @@ const TagsTable: FunctionComponent = () => {
 
   const [page, setPage] = useState(queryPage ? +queryPage : 1);
   const [pageSize, setPageSize] = useState(10);
-  const [order, setOrder] = useState("desc");
+  const [orderBy, setOrderBy] = useState(OrderBy.DESC);
+  const [sortBy, setSortBy] = useState(SortBy.POPULAR);
 
   const { data, isLoading, isError, error } = useQuery<
     TagsResponse,
     AxiosError<ErrorResponse>
   >({
-    queryKey: ["tags", page, pageSize, order],
-    queryFn: () => getTags({ page, pageSize, order }),
+    queryKey: ["tags", page, pageSize, orderBy, sortBy],
+    queryFn: () => getTags({ page, pageSize, orderBy, sortBy }),
+    retry: 1,
   });
 
   const handlePageChange = (
@@ -57,6 +63,24 @@ const TagsTable: FunctionComponent = () => {
       }}
     >
       <CardHeader title="Tags list" sx={{ textAlign: "center" }} />
+      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+        <Typography
+          variant="subtitle2"
+          sx={{
+            p: 3,
+          }}
+        >
+          Rows per page
+        </Typography>
+        <TextField
+          type="number"
+          value={pageSize}
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+            setPageSize(+event.target.value);
+          }}
+        />
+      </Box>
+
       {isLoading ? (
         <LoadingProgress />
       ) : isError ? (
@@ -68,21 +92,12 @@ const TagsTable: FunctionComponent = () => {
         <CardContent>
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="users table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column) => {
-                    return (
-                      <TableCell
-                        key={column.field}
-                        align={column.align}
-                        sx={{ fontWeight: 700 }}
-                      >
-                        {column.headerName}
-                      </TableCell>
-                    );
-                  })}
-                </TableRow>
-              </TableHead>
+              <TableHead
+                sortBy={sortBy}
+                orderBy={orderBy}
+                setOrderBy={setOrderBy}
+                setSortBy={setSortBy}
+              />
               <TableBody>
                 {data?.items.map((tag) => (
                   <TableRow
@@ -105,6 +120,7 @@ const TagsTable: FunctionComponent = () => {
       )}
       <Pagination
         count={data && Math.ceil(data?.total / pageSize)}
+        siblingCount={0}
         page={page}
         onChange={handlePageChange}
         color="primary"

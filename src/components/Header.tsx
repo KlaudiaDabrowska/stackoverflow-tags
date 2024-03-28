@@ -6,8 +6,8 @@ const Header: FunctionComponent = () => (
     <Typography
       variant="h3"
       sx={{
-        p: 3,
-        mb: { xs: 4, md: 8 },
+        p: 1,
+        mb: 1,
         textAlign: "center",
         fontWeight: { xs: "bold", md: "normal" },
       }}
