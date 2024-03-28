@@ -1,5 +1,4 @@
 import { TableCellProps } from "@mui/material";
-import { GridColDef } from "@mui/x-data-grid";
 
 type Columns = {
   field: string;
