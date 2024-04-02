@@ -72,11 +72,18 @@ const TagsTable: FunctionComponent = () => {
       }}
     >
       <CardHeader title="Tags list" sx={{ textAlign: "center" }} />
-      <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          px: { xs: 2, md: 6 },
+        }}
+      >
         <Typography
           variant="subtitle2"
           sx={{
-            p: 3,
+            px: 1,
           }}
         >
           Rows per page
@@ -87,6 +94,8 @@ const TagsTable: FunctionComponent = () => {
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setPageSize(parseInt(event.target.value));
           }}
+          size="small"
+          sx={{ width: { xs: "20%", md: "10%" } }}
         />
       </Box>
 
