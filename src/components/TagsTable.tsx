@@ -83,9 +83,9 @@ const TagsTable: FunctionComponent = () => {
         </Typography>
         <TextField
           type="number"
-          value={pageSize}
+          value={pageSize.toString()}
           onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setPageSize(+event.target.value);
+            setPageSize(parseInt(event.target.value));
           }}
         />
       </Box>
@@ -128,7 +128,7 @@ const TagsTable: FunctionComponent = () => {
         </CardContent>
       )}
       <Pagination
-        count={data && Math.ceil(data?.total / pageSize)}
+        count={data && Math.ceil(data?.total / debouncedPageSize)}
         siblingCount={0}
         page={page}
         onChange={handlePageChange}
