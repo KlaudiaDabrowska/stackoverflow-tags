@@ -109,7 +109,7 @@ const TagsTable: FunctionComponent = () => {
       ) : (
         <CardContent>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="users table">
+            <Table sx={{ minWidth: 650 }} aria-label="tags table">
               <TableHead
                 sortBy={sortBy}
                 orderBy={orderBy}
