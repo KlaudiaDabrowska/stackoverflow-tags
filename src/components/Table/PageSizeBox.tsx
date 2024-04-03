@@ -1,5 +1,5 @@
 import { Box, TextField, Typography } from "@mui/material";
-import { FunctionComponent, SetStateAction } from "react";
+import { FunctionComponent } from "react";
 
 type Props = {
   pageSize: number;
@@ -28,6 +28,10 @@ const PageSizeBox: FunctionComponent<Props> = ({ pageSize, setPageSize }) => {
         type="number"
         value={pageSize.toString()}
         onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
+          if (!Number.isInteger(parseInt(event.target.value))) {
+            setPageSize(0);
+            return;
+          }
           setPageSize(parseInt(event.target.value));
         }}
         size="small"
