@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  Box,
   Card,
   CardContent,
   CardHeader,
@@ -12,22 +11,21 @@ import {
   TableCell,
   TableContainer,
   TableRow,
-  TextField,
-  Typography,
 } from "@mui/material";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FunctionComponent, useState } from "react";
 import getTags from "@/api/getTags";
 import { useQuery } from "@tanstack/react-query";
-import LoadingProgress from "./LoadingProgress";
+import LoadingProgress from "../Common/LoadingProgress";
 import { ErrorResponse, TagsResponse } from "@/utils/types/Tags";
 import { AxiosError } from "axios";
-import ErrorInfo from "./ErrorInfo";
+import ErrorInfo from "../Common/ErrorInfo";
 import OrderBy from "@/utils/types/OrderBy";
 import SortBy from "@/utils/types/SortBy";
 import TableHead from "./TableHead";
 import { useDebounce } from "use-debounce";
 import { parseAsStringEnum, useQueryState } from "nuqs";
+import PageSizeBox from "./PageSizeBox";
 
 const TagsTable: FunctionComponent = () => {
   const { push } = useRouter();
@@ -45,6 +43,7 @@ const TagsTable: FunctionComponent = () => {
     "sortBy",
     parseAsStringEnum<SortBy>(Object.values(SortBy)).withDefault(SortBy.POPULAR)
   );
+
   const { data, isLoading, isError, error } = useQuery<
     TagsResponse,
     AxiosError<ErrorResponse>
@@ -72,32 +71,7 @@ const TagsTable: FunctionComponent = () => {
       }}
     >
       <CardHeader title="Tags list" sx={{ textAlign: "center" }} />
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          px: { xs: 2, md: 6 },
-        }}
-      >
-        <Typography
-          variant="subtitle2"
-          sx={{
-            px: 1,
-          }}
-        >
-          Rows per page
-        </Typography>
-        <TextField
-          type="number"
-          value={pageSize.toString()}
-          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
-            setPageSize(parseInt(event.target.value));
-          }}
-          size="small"
-          sx={{ width: { xs: "20%", md: "10%" } }}
-        />
-      </Box>
+      <PageSizeBox pageSize={pageSize} setPageSize={setPageSize} />
 
       {isLoading ? (
         <LoadingProgress />
@@ -109,7 +83,7 @@ const TagsTable: FunctionComponent = () => {
       ) : (
         <CardContent>
           <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 650 }} aria-label="users table">
+            <Table sx={{ minWidth: 650 }} aria-label="tags table">
               <TableHead
                 sortBy={sortBy}
                 orderBy={orderBy}

@@ -1,4 +1,4 @@
-import LoadingProgress from "@/components/LoadingProgress";
+import LoadingProgress from "@/components/Common/LoadingProgress";
 import { Meta, StoryObj } from "@storybook/react";
 
 const meta: Meta<typeof LoadingProgress> = {

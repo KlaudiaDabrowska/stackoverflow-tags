@@ -1,6 +1,10 @@
-import TagsTable from "@/components/TagsTable";
-import { FunctionComponent } from "react";
+import TagsTable from "@/components/Table/TagsTable";
+import { Suspense } from "react";
 
-const Home: FunctionComponent = () => <TagsTable />;
-
-export default Home;
+export default function Home() {
+  return (
+    <Suspense>
+      <TagsTable />
+    </Suspense>
+  );
+}

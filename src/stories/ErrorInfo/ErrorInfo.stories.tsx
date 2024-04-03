@@ -1,4 +1,4 @@
-import ErrorInfo from "@/components/ErrorInfo";
+import ErrorInfo from "@/components/Common/ErrorInfo";
 import { Meta, StoryObj } from "@storybook/react";
 import args from "./consts/args";
 import argTypes from "./consts/argTypes";
