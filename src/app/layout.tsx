@@ -3,8 +3,8 @@ import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import Providers from "@/utils/Providers";
 import { Container, Grid } from "@mui/material";
-import Header from "@/components/Header";
 import { FunctionComponent, PropsWithChildren } from "react";
+import Header from "@/components/Common/Header";
 
 const inter = Lato({ weight: ["400", "700", "900"], subsets: ["latin"] });
 
