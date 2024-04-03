@@ -9,7 +9,7 @@ type TagsResponse = {
 };
 
 type TagItem = {
-  collectives: Collective[];
+  collectives?: Collective[];
   has_synonyms: boolean;
   is_moderator_only: boolean;
   is_required: boolean;
