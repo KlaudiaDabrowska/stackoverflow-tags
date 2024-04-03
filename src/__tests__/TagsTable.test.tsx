@@ -3,7 +3,7 @@ import { http, HttpResponse } from "msw";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { setupServer } from "msw/node";
 import generateTagsResponse from "@/utils/mocks/generateTagsResponse";
-import TagsTable from "@/components/TagsTable";
+import TagsTable from "@/components/Table/TagsTable";
 
 const queryClient = new QueryClient();
 
@@ -39,7 +39,7 @@ describe("Tags Table", () => {
 
   afterAll(() => server.close());
 
-  it("should render ten tags in a table", () => {
+  it("should get ten tags in a table", () => {
     server.use(
       http.get(
         `${process.env.NEXT_PUBLIC_BASE_API_URL}/2.3/tags?page=1&pagesize=10&order=desc&sort=popular&site=stackoverflow&filter=!nNPvSNVZBz`,
@@ -61,6 +61,4 @@ describe("Tags Table", () => {
       expect(await screen.findByText(tag.name)).toBeInTheDocument();
     });
   });
-
-  it("should render error", () => {});
 });
