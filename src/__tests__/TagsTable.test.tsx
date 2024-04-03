@@ -9,17 +9,22 @@ const queryClient = new QueryClient();
 
 const server = setupServer();
 
+jest.mock("next/navigation", () => ({
+  ...require("next-router-mock"),
+  useRouter: () => ({
+    push: () => jest.fn(),
+  }),
+  useSearchParams: () => ({
+    get: (key: String) => "1",
+  }),
+}));
+
 describe("Tags Table", () => {
   const tagsResponse = generateTagsResponse(10, 100);
 
   beforeAll(() => {
     server.listen();
-    server.use(
-      http.get(
-        `${process.env.NEXT_PUBLIC_BASE_API_URL}/2.3/tags?page=1&pagesize=10&order=desc&sort=popular&site=stackoverflow&filter=!nNPvSNVZBz`,
-        () => HttpResponse.json({ tagsResponse })
-      )
-    );
+
     render(
       <QueryClientProvider client={queryClient}>
         <TagsTable />
@@ -35,11 +40,27 @@ describe("Tags Table", () => {
   afterAll(() => server.close());
 
   it("should render ten tags in a table", () => {
+    server.use(
+      http.get(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/2.3/tags?page=1&pagesize=10&order=desc&sort=popular&site=stackoverflow&filter=!nNPvSNVZBz`,
+        () => HttpResponse.json({ tagsResponse })
+      )
+    );
+
     expect(tagsResponse.tags.length).toBe(10);
   });
-  //   it("should render users name in a table", () => {
-  //     usersResponse.users.forEach(async (user) => {
-  //       expect(await screen.findByText(user.name)).toBeInTheDocument();
-  //     });
-  //   });
+  it("should render tags name in a table", () => {
+    server.use(
+      http.get(
+        `${process.env.NEXT_PUBLIC_BASE_API_URL}/2.3/tags?page=1&pagesize=10&order=desc&sort=popular&site=stackoverflow&filter=!nNPvSNVZBz`,
+        () => HttpResponse.json({ tagsResponse })
+      )
+    );
+
+    tagsResponse.tags.forEach(async (tag) => {
+      expect(await screen.findByText(tag.name)).toBeInTheDocument();
+    });
+  });
+
+  it("should render error", () => {});
 });
