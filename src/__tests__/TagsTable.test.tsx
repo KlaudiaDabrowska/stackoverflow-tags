@@ -45,7 +45,7 @@ describe("Tags Table", () => {
 
   afterAll(() => server.close());
 
-  it("should get ten tags in a table", () => {
+  it("should tags response has ten tags", () => {
     expect(tagsResponse.tags.length).toBe(10);
   });
   it("should render tags name in a table", () => {
